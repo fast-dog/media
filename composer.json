@@ -1,0 +1,50 @@
+{
+  "name": "fast_dog/media",
+  "type": "project",
+  "description": "FastDog CMS Media module.",
+  "keywords": [
+    "FastDog CMS",
+    "laravel"
+  ],
+  "license": "MIT",
+  "require": {
+    "php": "^7.1.3",
+    "barryvdh/laravel-elfinder": "^0.4.2",
+    "fast_dog/core": "dev-master",
+    "fideloper/proxy": "^4.0",
+    "intervention/image": "2.*",
+    "intervention/imagecache": "2.*",
+    "laravel/framework": "5.8.*",
+    "laravel/tinker": "^1.0"
+  },
+  "require-dev": {
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
+  "extra": {
+    "laravel": {
+      "dont-discover": [
+        "*"
+      ]
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "FastDog\\Meida\\": "src/"
+    },
+    "classmap": [
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+  }
+}
