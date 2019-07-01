@@ -1,7 +1,5 @@
 <?php
-namespace FastDog\Media\Entity;
-
-
+namespace FastDog\Media\Models;
 
 use FastDog\Core\Models\BaseModel;
 use Illuminate\Database\Schema\Blueprint;

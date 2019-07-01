@@ -1,13 +1,10 @@
 <?php
-namespace FastDog\Media\Entity;
+namespace FastDog\Media\Models;
 
 use elFinderVolumeLocalFileSystem;
 use FastDog\Core\Models\BaseModel;
 use FastDog\Core\Models\ModuleManager;
 use FastDog\Media\Media;
-use FastDog\Admin\Models\Desktop as Desktop;
-use FastDog\Media\Models\ElFinderStorage;
-use FastDog\Media\Models\Gallery;
 
 /**
  * Загруженный файл
