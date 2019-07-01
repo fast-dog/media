@@ -33,7 +33,7 @@
   },
   "autoload": {
     "psr-4": {
-      "FastDog\\Meida\\": "src/"
+      "FastDog\\Media\\": "src/"
     },
     "classmap": [
     ]
