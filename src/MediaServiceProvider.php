@@ -35,6 +35,8 @@ class MediaServiceProvider extends LaravelServiceProvider
     public function register(): void
     {
         $this->app->register(MediaEventServiceProvider::class);
+
+        $this->app->alias('Image', \Intervention\Image\Facades\Image::class);
     }
 
     /**

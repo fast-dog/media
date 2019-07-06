@@ -4,9 +4,9 @@ namespace FastDog\Media;
 
 
 use FastDog\Core\Interfaces\ModuleInterface;
+use FastDog\Core\Models\DomainManager;
 use FastDog\Core\Models\Module;
-use FastDog\Media\Entity\GalleryItem;
-use FastDog\Media\Entity\GalleryItemHistory;
+use FastDog\Media\Models\GalleryItem;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\Request;
 
@@ -39,7 +39,7 @@ class Media extends GalleryItem implements ModuleInterface
     protected $data;
 
     /**
-     * @var \App\Core\Module\Module $module
+     * @var $module
      */
     public $module;
 
@@ -59,48 +59,6 @@ class Media extends GalleryItem implements ModuleInterface
      */
     public function routePublic()
     {
-    }
-
-    /**
-     * События обрабатываемые модулем
-     *
-     * @return mixed|array
-     */
-    public function initEvents(): array
-    {
-        return [
-            'FastDog\Media\Events\UploadFileElFinder' => [
-                'FastDog\Media\Listeners\UploadFileElFinder',
-            ],
-            'FastDog\Media\Events\DeleteFileElFinder' => [
-                'FastDog\Media\Listeners\DeleteFileElFinder',
-            ],
-            'FastDog\Media\Events\PasteFileElFinder' => [
-                'FastDog\Media\Listeners\PasteFileElFinder',
-            ],
-            'FastDog\Media\Events\RenameFileElFinder' => [
-                'FastDog\Media\Listeners\RenameFileElFinder',
-            ],
-            'FastDog\Media\Events\BeforeUploadFile' => [
-                'FastDog\Media\Listeners\BeforeUploadFile',
-            ],
-            'FastDog\Media\Events\AfterUploadFile' => [
-                'FastDog\Media\Listeners\AfterUploadFile',
-            ],
-            'FastDog\Media\Events\BeforeDeleteFile' => [
-                'FastDog\Media\Listeners\BeforeDeleteFile',
-            ],
-            'FastDog\Media\Events\AfterDeleteFile' => [
-                'FastDog\Media\Listeners\AfterDeleteFile',
-            ],
-            'FastDog\Content\Events\ContentAdminPrepare' => [
-                'FastDog\Media\Listeners\ContentAdminPrepare',
-            ],
-            'FastDog\Media\Events\ItemsAdminPrepare' => [
-                'FastDog\Media\Listeners\ItemsAdminPrepare',
-            ],
-
-        ];
     }
 
 
@@ -125,7 +83,7 @@ class Media extends GalleryItem implements ModuleInterface
      *
      * @return null|array
      */
-    public function getTemplates($paths = '')
+    public function getTemplates($paths = ''): array
     {
         return [];
     }
@@ -135,7 +93,7 @@ class Media extends GalleryItem implements ModuleInterface
      *
      * @return null|array
      */
-    public function getMenuType()
+    public function getMenuType(): array
     {
         return [];
     }
@@ -146,7 +104,7 @@ class Media extends GalleryItem implements ModuleInterface
      * @param bool $includeTemplates
      * @return array
      */
-    public function getModuleInfo($includeTemplates = true)
+    public function getModuleInfo($includeTemplates = true): array
     {
         return [];
     }
@@ -157,7 +115,7 @@ class Media extends GalleryItem implements ModuleInterface
      * @param $data
      * @return mixed
      */
-    public function setConfig($data)
+    public function setConfig(\StdClass $data): void
     {
         $this->data = $data;
     }
@@ -167,7 +125,7 @@ class Media extends GalleryItem implements ModuleInterface
      *
      * @return mixed
      */
-    public function getConfig()
+    public function getConfig(): \StdClass
     {
         return $this->data;
     }
@@ -178,7 +136,7 @@ class Media extends GalleryItem implements ModuleInterface
      *
      * @return mixed
      */
-    public function getModuleType()
+    public function getModuleType(): array
     {
         return [];
     }
@@ -191,7 +149,7 @@ class Media extends GalleryItem implements ModuleInterface
      * @param Menu $item
      * @return mixed
      */
-    public function getMenuRoute($request, $item)
+    public function getMenuRoute(Request $request, $item): array
     {
         return [];
     }
