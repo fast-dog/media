@@ -399,4 +399,14 @@ class Media extends GalleryItem implements ModuleInterface
     {
         // TODO: Implement getTables() method.
     }
+
+    /**
+     * События обрабатываемые модулем
+     *
+     * @return void
+     */
+    public function initEvents(): array
+    {
+        // TODO: Implement initEvents() method.
+    }
 }
