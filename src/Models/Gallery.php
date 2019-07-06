@@ -2,7 +2,7 @@
 namespace FastDog\Media\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Intervention\Image\ImageManagerStatic as Image;
 /**
  * Учет загруженных файлов
  *
@@ -121,7 +121,7 @@ class Gallery extends Model
             }
             $file = $dir . '/' . $subDir . '/' . $fileName;
             if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $file)) {
-                \Image::cache(function ($image) use ($_image, $file, $x, $y) {
+                Image::cache(function ($image) use ($_image, $file, $x, $y) {
                     $img = $image->make($_SERVER['DOCUMENT_ROOT'] . $_image)->resize($x, $y, function ($constraint) {
                         $constraint->aspectRatio();
                         $constraint->upsize();
