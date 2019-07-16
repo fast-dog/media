@@ -128,46 +128,6 @@ class MediaConfig extends BaseModel
 
 
     /**
-     * Создание таблицы базы данных
-     *
-     * Будет создана следующая таблица:
-     *
-     * <pre>
-     * CREATE TABLE media_config (
-     *          id int(11) NOT NULL AUTO_INCREMENT,
-     *          name varchar(50) DEFAULT NULL,
-     *          alias varchar(255) DEFAULT NULL,
-     *          value longblob DEFAULT NULL,
-     *          created_at datetime DEFAULT NULL,
-     *          updated_at datetime DEFAULT NULL,
-     *          deleted_at datetime DEFAULT NULL,
-     *          priority tinyint(4) DEFAULT 0,
-     *          PRIMARY KEY (id),
-     *          UNIQUE INDEX UK_catalog_media_alias (alias)
-     * )
-     * COMMENT = 'Параметры модуля каталог'
-     * </pre>
-     *
-     * @return void
-     */
-    public static function createDbSchema()
-    {
-        if (!Schema::hasTable('media_config')) {
-            Schema::create('media_config', function (Blueprint $table) {
-                $table->increments('id');
-                $table->string(self::NAME)->comment('Название');
-                $table->string(self::ALIAS)->comment('Псевдоним');
-                $table->json(self::VALUE)->comment('Значение');
-                $table->tinyInteger('priority');
-                $table->timestamps();
-                $table->softDeletes();
-                $table->unique(self::ALIAS, 'UK_media_config_alias');
-            });
-            DB::statement("ALTER TABLE `catalog_config` comment 'Параметры модуля каталог'");
-        }
-    }
-
-    /**
      * Получение значения из парамтеров конфигурации
      *
      * @param $alias

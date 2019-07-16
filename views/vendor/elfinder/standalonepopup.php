@@ -1,15 +1,12 @@
 <?php
-/**
- * @var $moduleManager \App\Core\Module\ModuleManager
- */
-$moduleManager = \App::make(\App\Core\Module\ModuleManager::class);
+use FastDog\Core\Models\ModuleManager;
+use FastDog\Media\Models\MediaConfig;
+/** @var FastDog\Core\Models\ModuleManager  $moduleManager */
+$moduleManager = \App::make(ModuleManager::class);
 
-/**
- * @var $user \App\Modules\Users\Entity\User
- */
-$user = Auth::getUser();
+$user = \Auth::getUser();
 
-$theme = \App\Modules\Media\Entity\MediaConfig::getValue( 'main','theme', 'default');
+$theme =  MediaConfig::getValue('main', 'theme', 'default');
 
 
 $id = \Request::input('popup_id', 'elFinderModal');
@@ -45,15 +42,15 @@ $id = \Request::input('popup_id', 'elFinderModal');
                     user_id: '<?= $user->id ?>',
                     '<?=env('SESSION_COOKIE_NAME')?>': '<?=\Session::getId()?>',
                     'parent_id': window.parent.parameters.parent_id,
-                    'parent_type': window.parent.parameters.parent_type,
+                    'parent_type': window.parent.parameters.parent_type
                 },
                 url: '<?= route("elfinder.connector") ?>',  // connector URL
                 resizable: false,
                 commandsOptions: {
-                    getfile: { multiple: true }
+                    getfile: {multiple: true}
                 },
                 getFileCallback: function (file) {
-                    if (typeof window.parent.elfinderSelectFile == "function") {
+                    if (typeof window.parent.elfinderSelectFile == 'function') {
                         window.parent.elfinderSelectFile(file);
                     }
                     //$('#<?= $input_id?>', window.parent.document).val(file.path).trigger('change')

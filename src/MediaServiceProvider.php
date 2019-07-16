@@ -3,7 +3,6 @@
 namespace FastDog\Media;
 
 
-use FastDog\Meida\MediaEventServiceProvider;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 
 class MediaServiceProvider extends LaravelServiceProvider
@@ -25,6 +24,14 @@ class MediaServiceProvider extends LaravelServiceProvider
         $this->handleConfigs();
         $this->handleRoutes();
         $this->handleMigrations();
+
+        $this->loadViewsFrom(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR, 'elfinder');
+
+        $this->publishes([
+            __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR =>
+                base_path('resources/views/'),
+        ]);
+
     }
 
     /**
@@ -34,6 +41,7 @@ class MediaServiceProvider extends LaravelServiceProvider
      */
     public function register(): void
     {
+
         $this->app->register(MediaEventServiceProvider::class);
         $this->app->register(ElfinderServiceProviderFD::class);
 

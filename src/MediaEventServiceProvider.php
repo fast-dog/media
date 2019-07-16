@@ -1,12 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dg
- * Date: 010 10.05.19
- * Time: 22:16
- */
-
-namespace FastDog\Meida;
+namespace FastDog\Media;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
