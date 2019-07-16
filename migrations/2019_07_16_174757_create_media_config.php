@@ -16,19 +16,16 @@ class CreateMediaConfig extends Migration
     public function up()
     {
         Schema::create('media_config', function (Blueprint $table) {
-
-            Schema::create('media_config', function (Blueprint $table) {
-                $table->increments('id');
-                $table->string(MediaConfig::NAME)->comment('Название');
-                $table->string(MediaConfig::ALIAS)->comment('Псевдоним');
-                $table->json(MediaConfig::VALUE)->comment('Значение');
-                $table->tinyInteger('priority');
-                $table->timestamps();
-                $table->softDeletes();
-                $table->unique(MediaConfig::ALIAS, 'UK_media_config_alias');
-            });
-            DB::statement("ALTER TABLE `media_config` comment 'Параметры модуля медиа материалы'");
+            $table->increments('id');
+            $table->string(MediaConfig::NAME)->comment('Название');
+            $table->string(MediaConfig::ALIAS)->comment('Псевдоним');
+            $table->json(MediaConfig::VALUE)->comment('Значение');
+            $table->tinyInteger('priority');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->unique(MediaConfig::ALIAS, 'UK_media_config_alias');
         });
+        DB::statement("ALTER TABLE `media_config` comment 'Параметры модуля медиа материалы'");
     }
 
     /**
