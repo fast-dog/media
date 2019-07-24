@@ -3,6 +3,7 @@
 namespace FastDog\Media;
 
 
+use FastDog\Core\Models\ModuleManager;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 
 class MediaServiceProvider extends LaravelServiceProvider
@@ -24,6 +25,7 @@ class MediaServiceProvider extends LaravelServiceProvider
         $this->handleConfigs();
         $this->handleRoutes();
         $this->handleMigrations();
+        $this->handleLang();
 
         $this->loadViewsFrom(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR, 'elfinder');
 
@@ -32,6 +34,11 @@ class MediaServiceProvider extends LaravelServiceProvider
                 base_path('resources/views/'),
         ]);
 
+        /**
+         * @var $moduleManager ModuleManager
+         */
+        $moduleManager = \App::make(ModuleManager::class);
+        $moduleManager->pushModule(Media::MODULE_ID, (new Media())->getModuleInfo(true));
     }
 
     /**
@@ -85,5 +92,17 @@ class MediaServiceProvider extends LaravelServiceProvider
     private function handleRoutes(): void
     {
         $this->loadRoutesFrom(__DIR__ . '/../routes/routes.php');
+    }
+
+    /**
+     * Определение локализации
+     */
+    private function handleLang(): void
+    {
+        $path = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR;
+        $this->loadTranslationsFrom($path, self::NAME);
+        $this->publishes([
+            $path => resource_path('lang/vendor/fast_dog/' . self::NAME),
+        ]);
     }
 }

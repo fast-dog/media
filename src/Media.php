@@ -3,12 +3,11 @@
 namespace FastDog\Media;
 
 
-use FastDog\Core\Interfaces\ModuleInterface;
 use FastDog\Core\Models\DomainManager;
-use FastDog\Core\Models\Module;
 use FastDog\Media\Models\GalleryItem;
+use FastDog\User\Models\User;
 use Illuminate\Filesystem\FilesystemAdapter;
-use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 /**
  * Управление медиа данными
@@ -19,17 +18,14 @@ use Illuminate\Http\Request;
  * @version 0.1.5
  * @author Андрей Мартынов <d.g.dev482@gmail.com>
  */
-class Media extends GalleryItem implements ModuleInterface
+class Media extends GalleryItem
 {
     /**
-     * Имя родительского списка доступа
-     *
-     * из за реализации ACL в пакете kodeine/laravel-acl
-     * нужно использовать имя верхнего уровня: action.__CLASS__::SITE_ID::access_level
-     *
-     * @var string $aclName
+     * Идентификатор модуля
+     * @const string
      */
-    protected $aclName = '';
+    const MODULE_ID = 'media';
+
 
     /**
      * Параметры конфигурации описанные в module.json
@@ -42,40 +38,6 @@ class Media extends GalleryItem implements ModuleInterface
      * @var $module
      */
     public $module;
-
-    /**
-     * Маршруты раздела администратора
-     *
-     * @return void
-     */
-    public function routeAdmin()
-    {
-    }
-
-    /**
-     * Маршруты публичного раздела
-     *
-     * @return void
-     */
-    public function routePublic()
-    {
-    }
-
-
-    /**
-     * Параметры модуля
-     *
-     * @return null
-     */
-    public function getModuleSetting()
-    {
-        if ($this->module == null) {
-            $this->module = Module::where('name', 'Файлы')->first();
-        }
-        $data = json_decode($this->module->{self::DATA});
-
-        return (isset($data->setting)) ? $data->setting : null;
-    }
 
 
     /**
@@ -106,7 +68,35 @@ class Media extends GalleryItem implements ModuleInterface
      */
     public function getModuleInfo($includeTemplates = true): array
     {
-        return [];
+        $paths = Arr::first(config('view.paths'));
+        $templates_paths = [];// $this->getTemplatesPaths();
+
+        return [
+            'id' => self::MODULE_ID,
+            'menu' => function () use ($paths, $templates_paths) {
+                $result = [];
+                foreach ($this->getMenuType() as $id => $item) {
+                    array_push($result, [
+                        'id' => $id,
+                        'name' => $item,
+                        'templates' => (isset($templates_paths[$id])) ? $this->getTemplates($paths . $templates_paths[$id]) : [],
+                        'class' => __CLASS__,
+                    ]);
+                }
+
+                return $result;
+            },
+            'templates_paths' => $templates_paths,
+            'module_type' => $this->getMenuType(),
+            'admin_menu' => function () {
+                return $this->getAdminMenuItems();
+            },
+            'access' => function () {
+                return [
+                    '000',
+                ];
+            },
+        ];
     }
 
     /**
@@ -128,30 +118,6 @@ class Media extends GalleryItem implements ModuleInterface
     public function getConfig(): \StdClass
     {
         return $this->data;
-    }
-
-
-    /**
-     * Возвращает возможные типы модулей
-     *
-     * @return mixed
-     */
-    public function getModuleType(): array
-    {
-        return [];
-    }
-
-
-    /**
-     * Возвращает маршрут компонента
-     *
-     * @param Request $request
-     * @param Menu $item
-     * @return mixed
-     */
-    public function getMenuRoute(Request $request, $item): array
-    {
-        return [];
     }
 
     /**
@@ -239,174 +205,35 @@ class Media extends GalleryItem implements ModuleInterface
     }
 
     /**
-     * Инициализация уровней доступа ACL
+     * Меню администратора
      *
-     * @return null
-     */
-    public function initAcl()
-    {
-        $domainList = DomainManager::getAccessDomainList();
-        foreach ($domainList as $domain) {
-            if ($domain['id'] !== '000') {
-                /**
-                 * Имя раздела разрешений должно быть в нижнем регистре из за
-                 * особенностей реализации методов в пакете kodeine/laravel-acl
-                 */
-                $name = strtolower(__CLASS__ . '::' . $domain['id']);
-
-                $roleGuest = DomainManager::getRoleGuest($domain['id']);
-                $data = [
-                    'name' => $name,
-                    'slug' => [
-                        'create' => false,
-                        'view' => true,
-                        'update' => false,
-                        'delete' => false,
-                        'api' => false,
-                    ],
-                    'description' => \GuzzleHttp\json_encode([
-                        'module_name' => 'Файлы',
-                        'description' => 'ACL для домена #' . $domain['id'],
-                    ]),
-                ];
-                $permGuest = Permission::where([
-                    'name' => $data['name'] . '::guest',
-                ])->first();
-
-                if (!$permGuest) {
-                    $data['name'] = $name . '::guest';
-                    $permGuest = Permission::create($data);
-                    $roleGuest->assignPermission($permGuest);
-                } else {
-                    Permission::where('id', $permGuest->id)->update([
-                        'slug' => json_encode($data['slug']),
-                    ]);
-                }
-                $permUser = Permission::where([
-                    'name' => $data['name'] . '::user',
-                ])->first();
-                if (!$permUser) {
-                    $data['inherit_id'] = $permGuest->id;
-                    $data['name'] = $name . '::user';
-                    $permUser = Permission::create($data);
-                } else {
-                    Permission::where('id', $permUser->id)->update([
-                        'slug' => json_encode($data['slug']),
-                    ]);
-                }
-                if ($permUser) {
-                    $roleUser = DomainManager::getRoleUser($domain['id']);
-                    if ($roleUser) {
-                        $roleUser->assignPermission($permUser);
-                    }
-
-                    $roleAdmin = DomainManager::getRoleAdmin($domain['id']);
-                    $data['slug'] = [
-                        'create' => true,
-                        'view' => true,
-                        'update' => true,
-                        'delete' => true,
-                        'api' => true,
-                    ];
-                    $permAdmin = Permission::where([
-                        'name' => $data['name'] . '::admin',
-                    ])->first();
-                    if (!$permAdmin) {
-                        $data['name'] = $name . '::admin';
-                        $data['inherit_id'] = $permUser->id;
-                        $permAdmin = Permission::create($data);
-                        $roleAdmin->assignPermission($permAdmin);
-                    } else {
-                        Permission::where('id', $permAdmin->id)->update([
-                            'slug' => json_encode($data['slug']),
-                        ]);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Метод возвращает отображаемый в публичной части контнет
-     *
-     * @param Components $module
-     * @return null|string
-     */
-    public function getContent(Components $module)
-    {
-        return null;
-    }
-
-    /**
-     * Директория модуля
-     *
-     * @return string
-     */
-    public function getModuleDir()
-    {
-        return dirname(__FILE__);
-    }
-
-    /**
-     * Параметры блоков добавляемых на рабочий стол администратора
+     * Возвращает пунты меню для раздела администратора
      *
      * @return array
      */
-    public function getDesktopWidget()
+    public function getAdminMenuItems()
     {
-        return [];
-    }
-
-    /**
-     * Схема установки модуля
-     *
-     * @param $allSteps
-     * @return mixed
-     */
-    public function getInstallStep(&$allSteps)
-    {
-        $last = array_last(array_keys($allSteps));
-
-        $allSteps[$last]['step'] = 'media_init';
-        $allSteps['media_init'] = [
-            'title_step' => trans('app.Модуль Файлы: подготовка, создание таблиц'),
-            'step' => 'media_install',
-            'stop' => false,
-            'install' => function ($request) {
-                sleep(1);
-            },
-        ];
-        $allSteps['media_install'] = [
-            'title_step' => trans('app.Модуль Файлы: таблицы созданы'),
-            'step' => '',
-            'stop' => false,
-            'install' => function ($request) {
-                GalleryItem::createDbSchema();
-                GalleryItemHistory::createDbSchema();
-                sleep(1);
-            },
+        $result = [
+            'icon' => 'fa-folder-o',
+            'name' => trans('media::interface.Файлы'),
+            'route' => '/media',
+            'children' => [],
         ];
 
-        return $allSteps;
-    }
+//        array_push($result['children'], [
+//            'icon' => 'fa-table',
+//            'name' => trans('user::interface.Управление'),
+//            'route' => '/media/items',
+//        ]);
+//
 
-    /**
-     * Возвращает массив таблиц для резервного копирования
-     *
-     * @return array
-     */
-    public function getTables()
-    {
-        // TODO: Implement getTables() method.
-    }
+        array_push($result['children'], [
+            'icon' => 'fa-gears',
+            'name' => trans('media::interface.Настройки'),
+            'route' => '/media/configuration',
+        ]);
 
-    /**
-     * События обрабатываемые модулем
-     *
-     * @return void
-     */
-    public function initEvents(): array
-    {
-        // TODO: Implement initEvents() method.
+
+        return $result;
     }
 }

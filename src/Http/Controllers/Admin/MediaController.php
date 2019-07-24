@@ -1,24 +1,9 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: dg
- * Date: 03.12.2016
- * Time: 13:36
- */
+<?php 
+namespace FastDog\Media\Http\Controllers\Admin;
 
-namespace FastDog\Media\Controllers\Admin;
-
-use App\Core\Acl\Permission;
-use App\Core\Acl\Role;
-use App\Core\BaseModel;
-use App\Core\Desktop;
-use App\Core\Module\Module;
-use App\Core\Module\ModuleManager;
-use App\Http\Controllers\Controller;
+  
 use FastDog\Config\Config;
-use FastDog\Config\Entity\DomainManager;
-use FastDog\Media\Entity\GalleryItem;
-use FastDog\Media\Entity\MediaConfig;
+use FastDog\Core\Http\Controllers\Controller;
 use FastDog\Media\Events\AfterDeleteFile;
 use FastDog\Media\Events\AfterUploadFile;
 use FastDog\Media\Events\BeforeDeleteFile;
