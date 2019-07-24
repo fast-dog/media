@@ -32,7 +32,7 @@ class ElfinderServiceProviderFD extends ElfinderServiceProvider
         {
             $router->get('/', 'ElfinderController@showIndex');
             $router->any('connector', ['as' => 'elfinder.connector',
-                'uses' => '\App\Http\Controllers\ElfinderControllerFD@showConnector']);
+                'uses' => '\FastDog\Media\Http\Controllers\Admin\ElfinderControllerFD@showConnector']);
             $router->get('popup/{input_id}', ['as' => 'elfinder.popup', 'uses' => 'ElfinderController@showPopup']);
             #$router->get('filepicker/{input_id}', ['as' => 'elfinder.filepicker', 'uses' => 'ElfinderController@showFilePicker']);
             #$router->get('tinymce', ['as' => 'elfinder.tinymce', 'uses' => 'ElfinderController@showTinyMCE']);

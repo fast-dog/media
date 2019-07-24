@@ -1,6 +1,6 @@
 <?php
 
-namespace FastDog\Media\Http\Controllers\Site;
+namespace FastDog\Media\Http\Controllers\Admin;
 
 
 use Barryvdh\Elfinder\Connector;
@@ -108,16 +108,16 @@ class ElfinderControllerFD extends ElfinderController
         if ($moduleManager->hasModule('App\Modules\Media\Media') && isset($_REQUEST['cmd']) && $response) {
             switch ($_REQUEST['cmd']) {
                 case 'upload':
-                    \Event::fire(new UploadFileElFinder($response, $connector, $elFinder));
+                    event(new UploadFileElFinder($response, $connector, $elFinder));
                     break;
                 case 'rm':
-                    \Event::fire(new DeleteFileElFinder($response, $connector, $elFinder));
+                    event(new DeleteFileElFinder($response, $connector, $elFinder));
                     break;
                 case 'paste':
-                    \Event::fire(new PasteFileElFinder($response, $connector, $elFinder));
+                    event(new PasteFileElFinder($response, $connector, $elFinder));
                     break;
                 case 'rename':
-                    \Event::fire(new RenameFileElFinder($response, $connector, $elFinder));
+                    event(new RenameFileElFinder($response, $connector, $elFinder));
                     break;
 
             }
