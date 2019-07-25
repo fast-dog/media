@@ -1,6 +1,6 @@
 <?php
 
-$ctrl = '\FastDog\Media\Controllers\Admin\MediaController';
+$ctrl = '\FastDog\Media\Http\Controllers\Admin\MediaController';
 
 
 //список объектов
