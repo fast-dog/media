@@ -34,6 +34,11 @@ class MediaServiceProvider extends LaravelServiceProvider
                 base_path('resources/views/'),
         ]);
 
+        $this->publishes([
+            __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR =>
+                public_path('packages/'),
+        ], 'public');
+
         /**
          * @var $moduleManager ModuleManager
          */
