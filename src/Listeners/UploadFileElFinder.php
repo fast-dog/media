@@ -2,9 +2,10 @@
 
 namespace FastDog\Media\Listeners;
 
-use FastDog\Config\Entity\DomainManager;
-use FastDog\Media\Entity\GalleryItem;
+
+use FastDog\Core\Models\DomainManager;
 use FastDog\Media\Events\UploadFileElFinder as EventUploadFileElFinder;
+use FastDog\Media\Models\GalleryItem;
 use Illuminate\Http\Request;
 
 /**
@@ -38,6 +39,8 @@ class UploadFileElFinder
         $response = $event->getData();
         $data = json_decode($response->getContent());
         if (isset($data->added)) {
+            //TODO: изменить логику привязки, перенести на сохранение моделей,
+            //так как возникают конфликты при удаление\переименование
             foreach ($data->added as $item) {
                 $check = GalleryItem::where([
                     GalleryItem::PATH => $item->url,

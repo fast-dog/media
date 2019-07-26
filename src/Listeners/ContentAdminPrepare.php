@@ -2,9 +2,9 @@
 
 namespace FastDog\Media\Listeners;
 
-use FastDog\Content\Entity\Content;
+
 use FastDog\Content\Events\ContentAdminPrepare as EventContentAdminPrepare;
-use FastDog\Media\Entity\GalleryItem;
+
 use Illuminate\Http\Request;
 
 /**

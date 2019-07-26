@@ -1,17 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dg
- * Date: 18.12.2016
- * Time: 23:33
- */
-
 namespace FastDog\Media\Listeners;
 
 
-use FastDog\Config\Entity\DomainManager;
-use FastDog\Media\Entity\GalleryItem;
+use FastDog\Core\Models\DomainManager;
 use FastDog\Media\Events\ItemsAdminPrepare as ItemsAdminPrepareEvent;
+use FastDog\Media\Models\GalleryItem;
 use Illuminate\Http\Request;
 
 /**

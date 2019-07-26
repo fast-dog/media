@@ -2,10 +2,11 @@
 
 namespace FastDog\Media\Listeners;
 
-use App\Core\Module\ModuleManager;
-use FastDog\Media\Entity\GalleryItem;
+
+use FastDog\Core\Models\ModuleManager;
 use FastDog\Media\Entity\GalleryItemHistory;
 use FastDog\Media\Events\PasteFileElFinder as EventPasteFileElFinder;
+use FastDog\Media\Models\GalleryItem;
 use Illuminate\Http\Request;
 
 /**
@@ -42,7 +43,7 @@ class PasteFileElFinder
         /**
          * @var $moduleManager ModuleManager
          */
-        $moduleManager = \App::make(\App\Core\Module\ModuleManager::class);
+        $moduleManager = \App::make(ModuleManager::class);
         $module = $moduleManager->getInstance('FastDog\Media\Media');
         $setting = $module->getModuleSetting();
 

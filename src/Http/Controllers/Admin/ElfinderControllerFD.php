@@ -5,6 +5,7 @@ namespace FastDog\Media\Http\Controllers\Admin;
 
 use Barryvdh\Elfinder\Connector;
 use Barryvdh\Elfinder\ElfinderController;
+use FastDog\Media\Models\GalleryItem;
 use FastDog\Media\Session\LaravelSession;
 use FastDog\Core\Models\ModuleManager;
 use FastDog\Media\Media;
@@ -44,6 +45,7 @@ class ElfinderControllerFD extends ElfinderController
             $session = null;
         }
 
+        // TODO: добавить настройки отменяющие проверку привязки файлов
         $opts = $this->app->config->get('elfinder.options', []);
         $opts = array_merge($opts, ['roots' => $roots, 'session' => $session]);
         $elFinder = new \elFinder($opts);

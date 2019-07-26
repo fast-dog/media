@@ -2,8 +2,8 @@
 
 namespace FastDog\Media\Listeners;
 
-use App\Core\BaseModel;
-use FastDog\Config\Entity\DomainManager;
+use FastDog\Core\Models\BaseModel;
+use FastDog\Core\Models\DomainManager;
 use FastDog\Media\Events\BeforeUploadFile as EventBeforeUploadFile;
 
 use Illuminate\Http\Request;

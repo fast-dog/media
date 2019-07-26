@@ -2,8 +2,9 @@
 
 namespace FastDog\Media\Listeners;
 
-use FastDog\Media\Entity\GalleryItem;
 
+
+use FastDog\Media\Models\GalleryItem;
 use Illuminate\Http\Request;
 use FastDog\Media\Events\DeleteFileElFinder as EventDeleteFileElFinder;
 
