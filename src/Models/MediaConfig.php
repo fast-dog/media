@@ -1,6 +1,8 @@
 <?php
+
 namespace FastDog\Media\Models;
 
+use FastDog\Admin\Models\Desktop;
 use FastDog\Core\Models\BaseModel;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +42,8 @@ class MediaConfig extends BaseModel
      * @var string $table
      */
     public $table = 'media_config';
+
+    public $fillable = [self::NAME, self::ALIAS, self::VALUE];
     /**
      * Загруженные конфигурации
      *
