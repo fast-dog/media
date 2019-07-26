@@ -5,7 +5,12 @@ namespace FastDog\Media\Http\Controllers\Admin;
 
 use Barryvdh\Elfinder\Connector;
 use Barryvdh\Elfinder\ElfinderController;
+use FastDog\Media\Events\DeleteFileElFinder;
+use FastDog\Media\Events\PasteFileElFinder;
+use FastDog\Media\Events\RenameFileElFinder;
+use FastDog\Media\Events\UploadFileElFinder;
 use FastDog\Media\Models\GalleryItem;
+use FastDog\Media\Models\MediaConfig;
 use FastDog\Media\Session\LaravelSession;
 use FastDog\Core\Models\ModuleManager;
 use FastDog\Media\Media;
@@ -45,7 +50,6 @@ class ElfinderControllerFD extends ElfinderController
             $session = null;
         }
 
-        // TODO: добавить настройки отменяющие проверку привязки файлов
         $opts = $this->app->config->get('elfinder.options', []);
         $opts = array_merge($opts, ['roots' => $roots, 'session' => $session]);
         $elFinder = new \elFinder($opts);
@@ -53,16 +57,16 @@ class ElfinderControllerFD extends ElfinderController
         $actionRun = true;
         if (true /*$moduleManager->hasModule('App\Modules\Media\Media')*/) {
             $module = $moduleManager->getInstance('media');
-            $setting = $module->getModuleSetting();
+
             if (isset($_REQUEST['cmd'])) {
                 switch ($_REQUEST['cmd']) {
                     case 'upload':
-                        if (!$setting->allow_upload) {
+                        if (MediaConfig::getValue(MediaConfig::CONFIG_MAIN, 'allow_upload', 'N') === 'N') {
                             $actionRun = false;
                         }
                         break;
                     case 'rm':
-                        if (!$setting->allow_delete) {
+                        if (MediaConfig::getValue(MediaConfig::CONFIG_MAIN, 'allow_delete', 'N') === 'N') {
                             $actionRun = false;
                         } else {
                             foreach ($_REQUEST['targets'] as $hash) {
@@ -92,7 +96,7 @@ class ElfinderControllerFD extends ElfinderController
                         }
                         break;
                     case 'paste':
-                        if (!$setting->allow_move) {
+                        if (MediaConfig::getValue(MediaConfig::CONFIG_MAIN, 'allow_move', 'N') === 'N') {
                             $actionRun = false;
                         }
                         break;
@@ -107,7 +111,7 @@ class ElfinderControllerFD extends ElfinderController
         } else {
             return response()->json(['error' => 'Действие запрещено параметрами модуля "Файлы"']);
         }
-        if ($moduleManager->hasModule('App\Modules\Media\Media') && isset($_REQUEST['cmd']) && $response) {
+        if ($moduleManager->hasModule('media') && isset($_REQUEST['cmd']) && $response) {
             switch ($_REQUEST['cmd']) {
                 case 'upload':
                     event(new UploadFileElFinder($response, $connector, $elFinder));
@@ -121,7 +125,6 @@ class ElfinderControllerFD extends ElfinderController
                 case 'rename':
                     event(new RenameFileElFinder($response, $connector, $elFinder));
                     break;
-
             }
         }
 
