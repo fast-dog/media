@@ -20,7 +20,7 @@ class GalleryItems extends Migration
                 $table->string('path')->comment('Путь к файлу')->nullable();
                 $table->integer('parent_id')->nullable()->comment('Идентификатор родителя');
                 $table->unsignedSmallInteger('parent_type')->comment('Тип');
-                $table->smallInteger('sort')->comment('Сортировка');
+                $table->smallInteger('sort')->default(100)->comment('Сортировка');
                 $table->char('hash', 32)->comment('Хэш пути к файлу');
                 $table->string('name', 200)->comment('Название');
                 $table->json('data')->comment('Дополнительные параметры');
