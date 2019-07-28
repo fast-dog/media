@@ -1,15 +1,18 @@
-<?php 
+<?php
+
 namespace FastDog\Media\Http\Controllers\Admin;
 
-  
+
 use FastDog\Config\Config;
 use FastDog\Core\Http\Controllers\Controller;
+use FastDog\Core\Models\BaseModel;
 use FastDog\Media\Events\AfterDeleteFile;
 use FastDog\Media\Events\AfterUploadFile;
 use FastDog\Media\Events\BeforeDeleteFile;
 use FastDog\Media\Events\BeforeUploadFile;
 use FastDog\Media\Events\ItemsAdminPrepare;
 use FastDog\Media\Media;
+use FastDog\Media\Models\GalleryItem;
 use FastDog\Media\Request\Upload;
 use Illuminate\Http\Request;
 
@@ -75,7 +78,7 @@ class MediaController extends Controller
             $result['filters'][BaseModel::SITE_ID] = DomainManager::getAccessDomainList();
         }
 
-        $items = GalleryItem::where(function ($query) use ($request, &$scope) {
+        $items = GalleryItem::where(function($query) use ($request, &$scope) {
             $this->_getMenuFilter($query, $request, $scope, GalleryItem::class);
         })->$scope()->orderBy($request->input('order_by', 'created_at'), $request->input('direction', 'DESC'))
             ->paginate($request->input('limit', self::PAGE_SIZE));
@@ -114,7 +117,16 @@ class MediaController extends Controller
     public function postUpdate(Request $request)
     {
         $result = ['success' => true, 'items' => []];
-        $this->updatedModel($request->all(), GalleryItem::class);
+
+        try {
+            $this->updatedModel($request->all(), GalleryItem::class);
+        } catch (\Exception $e) {
+            return $this->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'code' => $e->getCode()
+            ], __METHOD__);
+        }
 
         return response()->json($result);
     }
@@ -169,7 +181,7 @@ class MediaController extends Controller
             Role::NAME => $request->input('role'),
         ])->first();
         if ($role) {
-            $permission = Permission::where(function ($query) use ($request, $role) {
+            $permission = Permission::where(function($query) use ($request, $role) {
                 $query->where(Permission::NAME, $request->input('permission') . '::' . $role->slug);
             })->first();
 
