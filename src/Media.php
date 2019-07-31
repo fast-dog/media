@@ -73,7 +73,7 @@ class Media extends GalleryItem
 
         return [
             'id' => self::MODULE_ID,
-            'menu' => function () use ($paths, $templates_paths) {
+            'menu' => function() use ($paths, $templates_paths) {
                 $result = [];
                 foreach ($this->getMenuType() as $id => $item) {
                     array_push($result, [
@@ -88,10 +88,10 @@ class Media extends GalleryItem
             },
             'templates_paths' => $templates_paths,
             'module_type' => $this->getMenuType(),
-            'admin_menu' => function () {
+            'admin_menu' => function() {
                 return $this->getAdminMenuItems();
             },
-            'access' => function () {
+            'access' => function() {
                 return [
                     '000',
                 ];
@@ -220,19 +220,13 @@ class Media extends GalleryItem
             'children' => [],
         ];
 
-//        array_push($result['children'], [
-//            'icon' => 'fa-table',
-//            'name' => trans('user::interface.Управление'),
-//            'route' => '/media/items',
-//        ]);
-//
-
         array_push($result['children'], [
             'icon' => 'fa-gears',
             'name' => trans('media::interface.Настройки'),
             'route' => '/media/configuration',
         ]);
 
+        $result = [];
 
         return $result;
     }
