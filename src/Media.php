@@ -84,7 +84,7 @@ class Media extends GalleryItem
                         'class' => __CLASS__,
                     ]);
                 }
-                $result = $result->sort('sort');
+                $result = $result->sortByDesc('sort');
                 return $result;
             },
             'templates_paths' => $templates_paths,
