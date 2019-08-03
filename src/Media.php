@@ -74,16 +74,17 @@ class Media extends GalleryItem
         return [
             'id' => self::MODULE_ID,
             'menu' => function() use ($paths, $templates_paths) {
-                $result = [];
+                $result = collect();
                 foreach ($this->getMenuType() as $id => $item) {
-                    array_push($result, [
-                        'id' => $id,
-                        'name' => $item,
+                    $result->push([
+                        'id' => self::MODULE_ID . '::' . $item['id'],
+                        'name' => $item['name'],
+                        'sort' => $item['sort'],
                         'templates' => (isset($templates_paths[$id])) ? $this->getTemplates($paths . $templates_paths[$id]) : [],
                         'class' => __CLASS__,
                     ]);
                 }
-
+                $result = $result->sort('sort');
                 return $result;
             },
             'templates_paths' => $templates_paths,
