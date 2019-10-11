@@ -227,8 +227,6 @@ class Media extends GalleryItem
             'route' => '/media/configuration',
         ]);
 
-        $result = [];
-
         return $result;
     }
 }
