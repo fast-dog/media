@@ -1,9 +1,13 @@
 <?php
-$moduleManager = \App::make(\App\Core\Module\ModuleManager::class);
 
-$theme = \App\Modules\Media\Entity\MediaConfig::getValue( 'main','theme', 'default');
+use FastDog\Core\Models\ModuleManager;
+use FastDog\Media\Models\MediaConfig;
 
-?><!DOCTYPE html>
+$moduleManager = app()->make(ModuleManager::class);
+$theme = MediaConfig::getValue('main', 'theme', 'default');
+
+?>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -42,7 +46,7 @@ $theme = \App\Modules\Media\Entity\MediaConfig::getValue( 'main','theme', 'defau
                     _token: '<?= csrf_token() ?>',
                     '<?=env('SESSION_COOKIE_NAME')?>': '<?=\Session::getId()?>',
                     'parent_id': <?= (isset($_REQUEST['parent_id'])) ? (int)$_REQUEST['parent_id'] : 0?>,
-                    'parent_type': '<?=isset($_REQUEST['parent_type'])   ? $_REQUEST['parent_type'] : ''?>'
+                    'parent_type': '<?=isset($_REQUEST['parent_type']) ? $_REQUEST['parent_type'] : ''?>'
                 },
                 url: '<?= route("elfinder.connector") ?>',  // connector URL
                 getFileCallback: function (file) {
