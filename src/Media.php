@@ -222,6 +222,12 @@ class Media extends GalleryItem
         ];
 
         array_push($result['children'], [
+            'icon' => 'fa-folder',
+            'name' => trans('media::interface.Обзор файлов'),
+            'route' => '/media/index',
+        ]);
+
+        array_push($result['children'], [
             'icon' => 'fa-gears',
             'name' => trans('media::interface.Настройки'),
             'route' => '/media/configuration',
