@@ -22,7 +22,7 @@ class GalleryItems extends Migration
                 $table->unsignedSmallInteger('parent_type')->comment('Тип');
                 $table->smallInteger('sort')->default(100)->comment('Сортировка');
                 $table->char('hash', 32)->comment('Хэш пути к файлу');
-                $table->string('name', 200)->comment('Название');
+                $table->string('name', 200)->nullable()->comment('Название');
                 $table->json('data')->comment('Дополнительные параметры');
                 $table->char('site_id', 3)->default('001')->comment('Код сайта');
                 $table->tinyInteger('state')->comment('Состояние')->default(1);
